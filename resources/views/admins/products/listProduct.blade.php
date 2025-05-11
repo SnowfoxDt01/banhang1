@@ -6,7 +6,32 @@
 @endsection
 
 @push('styles')
-    
+    <style>
+    /* Thay đổi màu nền nút đang active */
+    .pagination .page-item.active .page-link {
+        background-color: #000000; 
+        color: white;
+        border-color: #000000;
+    }
+
+    /* Hover khi di chuột vào các nút */
+    .pagination .page-link:hover {
+        background-color: #d0ebff;
+        color: #0d6efd;
+    }
+
+    /* Nút mặc định */
+    .pagination .page-link {
+        color: #000000;
+        border: 1px solid #dee2e6;
+    }
+
+    /* Tùy chọn: bo tròn các nút */
+    .pagination .page-link {
+        border-radius: 0.375rem;
+    }
+</style>
+
 @endpush
 
 @section('content')
@@ -20,7 +45,7 @@
             <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
               <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3 d-flex justify-content-between align-items-center px-3">
                 <h6 class="text-white text-capitalize">Danh sách sản phẩm</h6>
-                <button class="btn btn-light">Thêm sản phẩm</button>
+                <a href="{{ route('admin.products.addProduct') }}" class= "btn btn-light">Thêm sản phẩm</a>
               </div>
             </div>            
             <div class="card-body px-0 pb-2">
@@ -38,32 +63,81 @@
                     
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>
+                    @foreach($listProduct as $key => $value)
+                      <tr>
+                        <td>{{--name--}}
+                          <div class="d-flex px-2 py-1">
+                            <div class="d-flex flex-column justify-content-center">
+                              <h6 class="mb-0 text-sm">{{ $value -> name }}</h6> 
+                              
+                            </div>
+                          </div>
+                        </td>
+                        <td> {{--ảnh--}}
+                            <div class="text-center">
+                                @if ($value->images->count() > 0)
+                                    <img src="{{ asset($value->images->first()->image) }}"
+                                        alt="{{ $value->images->first()->alt }}" class="img-thumbnail" style="width: 125px; height: 125px; object-fit: cover;">
+                                @else
+                                    <img src="{{ asset('default_image.jpg') }}" alt="No Image"
+                                        class="img-thumbnail" style="width: 125px; height: 125px; object-fit: cover;">
+                                @endif
+                            </div>
+                        </td>
+                        <td>{{--mô tả--}}
+                          <p class="text-xs font-weight-bold mb-0">
+                              {{ Str::limit($value->description, 150, '...') }}
+                          </p>
+                        </td>
+                        <td class="align-middle text-center text-sm">
+                            {{ $value->variantProducts->sum('quantity') ?? 0 }}
+                        </td>
+
+
+                        <td class="align-middle text-center">{{--giá tiền--}}
+                          <span class="text-secondary text-xs font-weight-bold">
+                            {{ number_format($value->sale_price ?: $value->base_price, 0, ',', '.') }}₫
+                          </span>
+                        </td>
+                        
+
+                        <td class="align-middle text-center" style="width: 15%; white-space: normal;">
+                          <div class="d-inline-flex flex-wrap justify-content-center">
+                            <a href="#" class="btn btn-warning btn-sm me-1 mb-1">Sửa</a>
+                            <a href="#" class="btn btn-danger btn-sm me-1 mb-1">Xóa</a>
+                            <a href="#" class="btn btn-info btn-sm">Chi tiết</a>
+                          </div>
+                        </td>
+
+
+                      </tr>
+                    @endforeach
+                    {{-- <tr> mẫu bảng
+                      <td>name
                         <div class="d-flex px-2 py-1">
                           <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">John Michael</h6>
+                            <h6 class="mb-0 text-sm">John Michael</h6> 
                             <p class="text-xs text-secondary mb-0"><a href="https://demos.creative-tim.com/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="274d484f496744554246534e51420a534e4a0944484a">[email&#160;protected]</a></p>
                           </div>
                         </div>
                       </td>
-                      <td>
+                      <td> ảnh
                         
                           <div class="text-center">
                             <img src="{{ asset('../admin/img/team-2.jpg') }}" style="width: 100px; height: 100px;" class="border-radius-lg" alt="user1">
                           </div> 
                       </td>
-                      <td>
+                      <td>mô tả
                         <p class="text-xs font-weight-bold mb-0">Manager</p>
                         <p class="text-xs text-secondary mb-0">Organization</p>
                       </td>
-                      <td class="align-middle text-center text-sm">
+                      <td class="align-middle text-center text-sm">số lượng
                         <span class="badge badge-sm bg-gradient-success">Online</span>
                       </td>
-                      <td class="align-middle text-center">
+                      <td class="align-middle text-center">giá tiền
                         <span class="text-secondary text-xs font-weight-bold">23/04/18</span>
                       </td>
-                      <td class="align-middle">
+                      <td class="align-middle">hành động
                         <div class="text-center">
                           <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
                           Edit
@@ -71,149 +145,10 @@
                         </div>
                         
                       </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-2 py-1">
-                          <div>
-                            <img src="../assets/img/team-3.jpg" class="avatar avatar-sm me-3 border-radius-lg" alt="user2">
-                          </div>
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">Alexa Liras</h6>
-                            <p class="text-xs text-secondary mb-0"><a href="https://demos.creative-tim.com/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="cfaea3aab7ae8facbdaaaebba6b9aae2bba6a2e1aca0a2">[email&#160;protected]</a></p>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <p class="text-xs font-weight-bold mb-0">Programator</p>
-                        <p class="text-xs text-secondary mb-0">Developer</p>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="badge badge-sm bg-gradient-secondary">Offline</span>
-                      </td>
-                      <td class="align-middle text-center">
-                        <span class="text-secondary text-xs font-weight-bold">11/01/19</span>
-                      </td>
-                      <td class="align-middle">
-                        <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
-                          Edit
-                        </a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-2 py-1">
-                          <div>
-                            <img src="../assets/img/team-4.jpg" class="avatar avatar-sm me-3 border-radius-lg" alt="user3">
-                          </div>
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">Laurent Perrier</h6>
-                            <p class="text-xs text-secondary mb-0"><a href="https://demos.creative-tim.com/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b3dfd2c6c1d6ddc7f3d0c1d6d2c7dac5d69ec7dade9dd0dcde">[email&#160;protected]</a></p>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <p class="text-xs font-weight-bold mb-0">Executive</p>
-                        <p class="text-xs text-secondary mb-0">Projects</p>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="badge badge-sm bg-gradient-success">Online</span>
-                      </td>
-                      <td class="align-middle text-center">
-                        <span class="text-secondary text-xs font-weight-bold">19/09/17</span>
-                      </td>
-                      <td class="align-middle">
-                        <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
-                          Edit
-                        </a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-2 py-1">
-                          <div>
-                            <img src="../assets/img/team-3.jpg" class="avatar avatar-sm me-3 border-radius-lg" alt="user4">
-                          </div>
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">Michael Levi</h6>
-                            <p class="text-xs text-secondary mb-0"><a href="https://demos.creative-tim.com/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5f32363c373e3a331f3c2d3a3e2b36293a722b3632713c3032">[email&#160;protected]</a></p>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <p class="text-xs font-weight-bold mb-0">Programator</p>
-                        <p class="text-xs text-secondary mb-0">Developer</p>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="badge badge-sm bg-gradient-success">Online</span>
-                      </td>
-                      <td class="align-middle text-center">
-                        <span class="text-secondary text-xs font-weight-bold">24/12/08</span>
-                      </td>
-                      <td class="align-middle">
-                        <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
-                          Edit
-                        </a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-2 py-1">
-                          <div>
-                            <img src="../assets/img/team-2.jpg" class="avatar avatar-sm me-3 border-radius-lg" alt="user5">
-                          </div>
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">Richard Gran</h6>
-                            <p class="text-xs text-secondary mb-0"><a href="https://demos.creative-tim.com/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="91e3f8f2f9f0e3f5d1f2e3f4f0e5f8e7f4bce5f8fcbff2fefc">[email&#160;protected]</a></p>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <p class="text-xs font-weight-bold mb-0">Manager</p>
-                        <p class="text-xs text-secondary mb-0">Executive</p>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="badge badge-sm bg-gradient-secondary">Offline</span>
-                      </td>
-                      <td class="align-middle text-center">
-                        <span class="text-secondary text-xs font-weight-bold">04/10/21</span>
-                      </td>
-                      <td class="align-middle">
-                        <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
-                          Edit
-                        </a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-2 py-1">
-                          <div>
-                            <img src="../assets/img/team-4.jpg" class="avatar avatar-sm me-3 border-radius-lg" alt="user6">
-                          </div>
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">Miriam Eric</h6>
-                            <p class="text-xs text-secondary mb-0"><a href="https://demos.creative-tim.com/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="0b666279626a664b68796e6a7f627d6e267f626625686466">[email&#160;protected]</a></p>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <p class="text-xs font-weight-bold mb-0">Programator</p>
-                        <p class="text-xs text-secondary mb-0">Developer</p>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="badge badge-sm bg-gradient-secondary">Offline</span>
-                      </td>
-                      <td class="align-middle text-center">
-                        <span class="text-secondary text-xs font-weight-bold">14/09/20</span>
-                      </td>
-                      <td class="align-middle">
-                        <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
-                          Edit
-                        </a>
-                      </td>
-                    </tr>
+                    </tr> --}}
                   </tbody>
                 </table>
+                {{ $listProduct->links('pagination::bootstrap-5') }}
               </div>
             </div>
           </div>

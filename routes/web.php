@@ -27,9 +27,9 @@ route::group([
         'prefix' => 'products',
         'as' => 'products.',
     ], function () {
-        Route::get('/', [ProductController::class, 'index'])->name('index');
-        // Route::get('/create', [ProductController::class, 'create'])->name('create');
-        // Route::post('/store', [ProductController::class, 'store'])->name('store');
+        Route::get('/', [ProductController::class, 'listProduct'])->name('listProduct');
+        Route::get('/add-product', [ProductController::class, 'addProduct'])->name('addProduct');
+        Route::post('/add-product', [ProductController::class, 'addPostProduct'])->name('addPostProduct');
     });
 }); 
 

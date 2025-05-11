@@ -10,14 +10,30 @@ class Product extends Model
     use HasFactory;
     protected $table = 'products';
     public $primaryKey = 'id';
-    // public $timestamps = true;
-    // protected $fillable = [
-    //     'name',
-    //     'description',
-    //     'price',
-    //     'product_category_id',
-    //     'created_at',
-    //     'updated_at'
-    // ];
-    
+
+    protected $fillable = [
+        'product_category_id',
+        'name',
+        'description',
+        'base_price',
+        'sale_price',
+        'is_new',
+        'view',
+        'created_at',
+        'updated_at'
+    ];
+    public function images()
+{
+    return $this->hasMany(Image::class);
+}
+
+    public function variantProducts()
+    {
+        return $this->hasMany(VariantProduct::class);
+    }
+
+    public function productCategory()
+    {
+        return $this->belongsTo(ProductCategory::class, 'product_category_id');
+    }
 }
