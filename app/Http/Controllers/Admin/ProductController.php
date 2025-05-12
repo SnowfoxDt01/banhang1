@@ -126,6 +126,53 @@ class ProductController extends Controller
             }
         }
 
-        return redirect()->route('admin.products.listProduct')->with('success', 'Thêm sản phẩm thành công!');
+        return redirect()->route('admin.products.listProduct')->with(['message' => 'Thêm sản phẩm thành công!']);
+    }
+
+    public function deleteProduct($id)
+    {
+        $product = Product::findOrFail($id);
+
+        // Xóa các ảnh liên quan trong thư mục public
+        foreach ($product->images as $image) {
+            $imagePath = public_path($image->image);
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+            $image->delete();
+        }
+
+        // Xóa sản phẩm
+        $product->delete();
+
+        return redirect()->route('admin.products.listProduct')->with('message', 'Sản phẩm đã được xóa thành công!');
+    }
+
+    public function detailProduct($id)
+    {
+        // Lấy thông tin sản phẩm cùng với tên màu và kích thước của sản phẩm biến thể
+        $product = Product::with([
+            'productCategory',
+            'variantProducts.color',
+            'variantProducts.size',
+            'variantProducts.images',
+            // 'reviews'
+        ])->findOrFail($id);
+
+        
+        // // Tính số lượng đánh giá
+
+        // $totalReviews = $product->reviews->count();
+
+        // // Tính điểm trung bình đánh giá
+        // $averageRating = $totalReviews > 0 ? $product->reviews->avg('rating') : 0;
+
+        // Trả về view chi tiết sản phẩm
+        return view('admins.products.detailProduct', compact('product'))
+            ->with([
+                'product' => $product,
+                // 'totalReviews' => $totalReviews,
+                // 'averageRating' => $averageRating
+            ]);
     }
 }

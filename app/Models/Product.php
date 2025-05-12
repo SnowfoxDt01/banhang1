@@ -36,4 +36,8 @@ class Product extends Model
     {
         return $this->belongsTo(ProductCategory::class, 'product_category_id');
     }
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'variant_product_id');
+    }
 }

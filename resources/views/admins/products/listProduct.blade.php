@@ -38,7 +38,14 @@
 
 
 <div class="container-fluid py-2">
-        {{-- table 1 --}}
+      @if (session('message'))
+        <div class="alert alert-success alert-dismissible text-white" role="alert">
+          <span class="text-sm">{{ session('message') }}</span>
+          <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      @endif
       <div class="row">
         <div class="col-12">
           <div class="card my-4">
@@ -103,9 +110,15 @@
 
                         <td class="align-middle text-center" style="width: 15%; white-space: normal;">
                           <div class="d-inline-flex flex-wrap justify-content-center">
-                            <a href="#" class="btn btn-warning btn-sm me-1 mb-1">Sửa</a>
-                            <a href="#" class="btn btn-danger btn-sm me-1 mb-1">Xóa</a>
-                            <a href="#" class="btn btn-info btn-sm">Chi tiết</a>
+                            <a href="#" class="btn btn-warning btn-sm me-1 ">Sửa</a>
+                            <form action="{{ route('admin.products.deleteProduct', $value->id) }}" method="POST" class="delete-form">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">
+                                    Xóa
+                                </button>
+                            </form>
+                            <a href="{{ route('admin.products.detailProduct', $value->id) }}" class="btn btn-info btn-sm">Chi tiết</a>
                           </div>
                         </td>
 
@@ -155,12 +168,59 @@
         </div>
       </div>
       <!-- End Table 1 -->
-
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Bạn có chắc muốn xóa sản phẩm này không</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p class="text-sm">Nếu bạn xóa sản phẩm này, tất cả các thông tin liên quan đến sản phẩm sẽ bị xóa.</p>
+        <p class="text-sm">Bạn có chắc chắn muốn xóa không?</p>
+        <p class="text-sm">Nếu bạn không chắc chắn, hãy nhấn nút "Đóng" để quay lại.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+        <button type="button" class="btn btn-danger">Xóa sản phẩm</button>
+      </div>
+    </div>
+  </div>
+</div>
         
 
 @endsection
 
 
 @push('scripts')
+    <script>
+      var deleteModal = document.getElementById('deleteModal');
+      deleteModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget; // Nút bấm kích hoạt modal
+        var id = button.getAttribute('data-bs-id'); // Lấy giá trị data-bs-id
+        console.log('ID sản phẩm:', id); // Kiểm tra giá trị ID trong console
 
+        // Bạn có thể gán ID này vào một input ẩn hoặc xử lý logic khác tại đây
+        var modalBody = deleteModal.querySelector('.modal-body');
+        modalBody.textContent = 'Bạn có chắc muốn xóa sản phẩm với ID: ' + id + ' không?';
+      });
+    </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const deleteForms = document.querySelectorAll('.delete-form');
+
+        deleteForms.forEach(form => {
+          form.addEventListener('submit', function (event) {
+            event.preventDefault(); // Ngăn chặn gửi form ngay lập tức
+
+            const confirmDelete = confirm('Bạn có chắc chắn muốn xóa sản phẩm này không?');
+
+            if (confirmDelete) {
+              form.submit(); // Gửi form nếu người dùng xác nhận
+            }
+          });
+        });
+      });
+    </script>
 @endpush

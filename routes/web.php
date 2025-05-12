@@ -30,9 +30,10 @@ route::group([
         Route::get('/', [ProductController::class, 'listProduct'])->name('listProduct');
         Route::get('/add-product', [ProductController::class, 'addProduct'])->name('addProduct');
         Route::post('/add-product', [ProductController::class, 'addPostProduct'])->name('addPostProduct');
+        Route::delete('/delete/{id}', [ProductController::class, 'deleteProduct'])->name('deleteProduct');
+        Route::get('/detail/{id}', [ProductController::class, 'detailProduct'])->name('detailProduct');
     });
 }); 
-
 
 
  
