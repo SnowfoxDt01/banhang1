@@ -12,6 +12,7 @@
 
 @section('content')
 <div class="container py-4">
+    
     <div class="row">
         <!-- Product Images -->
         <div class="col-md-5">
@@ -31,18 +32,28 @@
             <p class="text-muted">Danh mục: {{ $product->productCategory->name }}</p>
             <p class="text-success fw-bold">Giá: {{ number_format($product->sale_price, 0, ',', '.') }} VND</p>
             <p class="text-decoration-line-through text-muted">Giá gốc: {{ number_format($product->base_price, 0, ',', '.') }} VND</p>
-            <p>{{ $product->description }}</p>
+            <p>Miêu tả sản phẩm: {{ $product->description }}</p>
+            <p>Số lượt xem sản phẩm: {{ $product->view }}</p>
+            <p>Trạng thái sản phẩm (hàng mới hoặc tồn kho):
+                @if ($product->is_new == 0)
+                    Hàng mới
+                @elseif ($product->is_new == 1)
+                    Tồn kho
+                @else
+                    Không xác định
+                @endif
+            </p>
 
             <!-- Variants -->
             <div class="variants mt-4">
-                <h6>Chọn màu sắc:</h6>
+                <h6>Màu sắc:</h6>
                 <div class="d-flex">
                     @foreach($product->variantProducts->unique('color.name') as $variant)
                         <span class="badge bg-secondary me-2">{{ $variant->color->name }}</span>
                     @endforeach
                 </div>
 
-                <h6 class="mt-3">Chọn kích thước:</h6>
+                <h6 class="mt-3">Kích thước:</h6>
                 <div class="d-flex">
                     @foreach($product->variantProducts->unique('size.name') as $variant)
                         <span class="badge bg-secondary me-2">{{ $variant->size->name }}</span>
@@ -51,6 +62,11 @@
             </div>
         </div>
     </div>
+    
+</div>
+<div class="mb-3">
+    <a href="{{ route('admin.products.listProduct') }}" class="btn btn-primary">Quay lại danh sách</a>
+    <a href="{{ route('admin.products.updateProduct', $product->id) }}" class="btn btn-warning">Chỉnh sửa sản phẩm</a>
 </div>
 @endsection
 

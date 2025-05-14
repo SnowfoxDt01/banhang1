@@ -110,7 +110,7 @@
 
                         <td class="align-middle text-center" style="width: 15%; white-space: normal;">
                           <div class="d-inline-flex flex-wrap justify-content-center">
-                            <a href="#" class="btn btn-warning btn-sm me-1 ">Sửa</a>
+                            <a href="{{ route('admin.products.updateProduct', $value->id) }}" class="btn btn-warning btn-sm me-1 ">Sửa</a>
                             <form action="{{ route('admin.products.deleteProduct', $value->id) }}" method="POST" class="delete-form">
                                 @csrf
                                 @method('DELETE')

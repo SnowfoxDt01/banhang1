@@ -175,4 +175,131 @@ class ProductController extends Controller
                 // 'averageRating' => $averageRating
             ]);
     }
+
+    public function updateProduct($id)
+    {
+        $product = Product::findOrFail($id);
+        $variantProducts = VariantProduct::where('product_id', $id)->get();
+        $categories = ProductCategory::all();
+        $colors = Color::all();
+        $sizes = Size::all();
+        return view('admins.products.updateProduct', compact('product', 'variantProducts', 'categories', 'colors', 'sizes'));
+    }
+
+    public function updatePatchProduct(Request $request, $id)
+    {
+        $request->validate([
+            'nameSP' => 'required',
+            'descriptionSP' => 'required',
+            'base_price' => 'required|numeric',
+            'sale_price' => 'required|numeric',
+            'product_category_id' => 'required|exists:product_categories,id',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $product = Product::with('variantProducts')->findOrFail($id);
+
+        // Cập nhật thông tin sản phẩm chính
+        $product->update([
+            'name' => $request->nameSP,
+            'description' => $request->descriptionSP,
+            'base_price' => $request->base_price,
+            'sale_price' => $request->sale_price,
+            'product_category_id' => $request->product_category_id,
+            'is_new' => $request->is_new ?? 0,
+            'updated_at' => now(),
+        ]);
+
+        // Cập nhật hình ảnh sản phẩm chính
+        if ($request->hasFile('product_images')) {
+            foreach ($product->images as $oldImage) {
+                $imagePath = public_path($oldImage->image);
+                if (file_exists($imagePath)) {
+                    unlink($imagePath);
+                }
+                $oldImage->delete();
+            }
+
+            foreach ($request->file('product_images') as $image) {
+                $newName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                $linkStorage = 'imageProducts/';
+                $image->move(public_path($linkStorage), $newName);
+                $linkImage = $linkStorage . $newName;
+
+                Image::create([
+                    'product_id' => $product->id,
+                    'image' => $linkImage,
+                    'alt' => 'Ảnh sản phẩm (' . $product->name . ')',
+                ]);
+            }
+        }
+
+        // Cập nhật sản phẩm biến thể
+        if ($request->has('variant_name')) {
+            foreach ($request->variant_name as $key => $name) {
+                if (isset($request->variant_id[$key]) && $request->variant_id[$key] !== '') {
+                    $variantId = $request->variant_id[$key];
+                    $variantProduct = VariantProduct::find($variantId);
+
+                    $variantProduct->update([
+                        'name' => $name,
+                        'quantity' => $request->variant_quantity[$key],
+                        'size_id' => $request->variant_size[$key],
+                        'color_id' => $request->variant_color[$key],
+                        'variant_price' => $request->variant_price[$key],
+                        'updated_at' => now(),
+                    ]);
+
+                    if ($request->hasFile("variant_image.$key")) {
+                        if ($variantProduct->image) {
+                            $imagePath = public_path($variantProduct->image->image);
+                            if (file_exists($imagePath)) {
+                                unlink($imagePath);
+                            }
+                            $variantProduct->image->delete();
+                        }
+
+                        $image = $request->file("variant_image.$key");
+                        $newName = time() . '_' . $key . '.' . $image->getClientOriginalExtension();
+                        $linkStorage = 'imageProducts/';
+                        $image->move(public_path($linkStorage), $newName);
+                        $linkImage = $linkStorage . $newName;
+
+                        Image::create([
+                            'variant_product_id' => $variantId,
+                            'image' => $linkImage,
+                            'alt' => 'Ảnh biến thể (' . $variantProduct->name . ')',
+                        ]);
+                    }
+                } else {
+                    $variantProduct = VariantProduct::create([
+                        'name' => $name,
+                        'quantity' => $request->variant_quantity[$key],
+                        'product_id' => $product->id,
+                        'size_id' => $request->variant_size[$key],
+                        'color_id' => $request->variant_color[$key],
+                        'variant_price' => $request->variant_price[$key],
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+
+                    if ($request->hasFile("variant_image.$key")) {
+                        $image = $request->file("variant_image.$key");
+                        $newName = time() . '_' . $key . '.' . $image->getClientOriginalExtension();
+                        $linkStorage = 'imageProducts/';
+                        $image->move(public_path($linkStorage), $newName);
+                        $linkImage = $linkStorage . $newName;
+
+                        Image::create([
+                            'variant_product_id' => $variantProduct->id,
+                            'image' => $linkImage,
+                            'alt' => 'Ảnh biến thể (' . $variantProduct->name . ')',
+                        ]);
+                    }
+                }
+            }
+        }
+
+        return redirect()->route('admin.products.listProduct')->with('message', 'Cập nhật sản phẩm thành công');
+    }
 }

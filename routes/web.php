@@ -32,6 +32,8 @@ route::group([
         Route::post('/add-product', [ProductController::class, 'addPostProduct'])->name('addPostProduct');
         Route::delete('/delete/{id}', [ProductController::class, 'deleteProduct'])->name('deleteProduct');
         Route::get('/detail/{id}', [ProductController::class, 'detailProduct'])->name('detailProduct');
+        Route::get('/update/{id}', [ProductController::class, 'updateProduct'])->name('updateProduct');
+        Route::patch('/update/{id}', [ProductController::class, 'updatePatchProduct'])->name('updatePatchProduct');
     });
 }); 
 
