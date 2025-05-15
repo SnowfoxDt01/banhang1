@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\VariantController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,13 @@ route::group([
         Route::get('/detail/{id}', [ProductController::class, 'detailProduct'])->name('detailProduct');
         Route::get('/update/{id}', [ProductController::class, 'updateProduct'])->name('updateProduct');
         Route::patch('/update/{id}', [ProductController::class, 'updatePatchProduct'])->name('updatePatchProduct');
+    });
+    route::group([
+        'prefix' => 'variants',
+        'as' => 'variants.',
+    ], function () {
+        Route::get('/', [VariantController::class, 'listVariant'])->name('listVariant');
+        
     });
 }); 
 
