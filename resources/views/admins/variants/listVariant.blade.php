@@ -106,15 +106,15 @@
 
                         <td class="align-middle text-center" style="width: 15%; white-space: normal;">
                           <div class="d-inline-flex flex-wrap justify-content-center">
-                            <a href="{{ route('admin.products.updateProduct', $value->id) }}" class="btn btn-warning btn-sm me-1 ">Sửa</a>
-                            <form action="{{ route('admin.products.deleteProduct', $value->id) }}" method="POST" class="delete-form">
+                            <a href="{{ route('admin.variants.updateVariant', $value->id) }}" class="btn btn-warning btn-sm me-1 ">Sửa</a>
+                            <form action="{{ route('admin.variants.deleteVariant', $value->id) }}" method="POST" class="delete-form">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger">
                                     Xóa
                                 </button>
                             </form>
-                            <a href="{{ route('admin.products.detailProduct', $value->id) }}" class="btn btn-info btn-sm">Chi tiết</a>
+                            <a href="{{ route('admin.variants.detailVariant', $value->id) }}" class="btn btn-info btn-sm">Chi tiết</a>
                           </div>
                         </td>
 

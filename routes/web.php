@@ -41,8 +41,23 @@ route::group([
         'as' => 'variants.',
     ], function () {
         Route::get('/', [VariantController::class, 'listVariant'])->name('listVariant');
-        
+        Route::delete('/delete/{id}', [VariantController::class, 'deleteVariant'])->name('deleteVariant');
+        Route::get('/detail/{id}', [VariantController::class, 'detailVariant'])->name('detailVariant');
+        Route::get('/update/{id}', [VariantController::class, 'updateVariant'])->name('updateVariant');
+        Route::patch('/update/{id}', [VariantController::class, 'updatePatchVariant'])->name('updatePatchVariant');
     });
+    route::group([
+        'prefix' => 'categories',
+        'as' => 'categories.',
+    ], function () {
+        Route::get('/', [ProductController::class, 'listCategory'])->name('listCategory');
+        Route::get('/add-category', [ProductController::class, 'addCategory'])->name('addCategory');
+        Route::post('/add-category', [ProductController::class, 'addPostCategory'])->name('addPostCategory');
+        Route::delete('/delete/{id}', [ProductController::class, 'deleteCategory'])->name('deleteCategory');
+        Route::get('/update/{id}', [ProductController::class, 'updateCategory'])->name('updateCategory');
+        Route::patch('/update/{id}', [ProductController::class, 'updatePatchCategory'])->name('updatePatchCategory');
+    });
+    
 }); 
 
 
