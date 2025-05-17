@@ -16,19 +16,19 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-dark" href="#">
+          <a class="nav-link {{ request()->routeIs('admin.categories.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('admin.categories.listCategory') }}">
             <i class="material-symbols-rounded opacity-5">dashboard</i>
             <span class="nav-link-text ms-1">Danh mục</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link {{ request()->routeIs('admin.products.listProduct') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('admin.products.listProduct') }}">
+          <a class="nav-link {{ request()->routeIs('admin.products.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('admin.products.listProduct') }}">
             <i class="material-symbols-rounded opacity-5">table_view</i>
             <span class="nav-link-text ms-1">Sản phẩm</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link {{ request()->routeIs('admin.variants.listVariant') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('admin.variants.listVariant') }}">
+          <a class="nav-link {{ request()->routeIs('admin.variants.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('admin.variants.listVariant') }}">
             <i class="material-symbols-rounded opacity-5">view_in_ar</i>
             <span class="nav-link-text ms-1">Biến thể</span>
           </a>

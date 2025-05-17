@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\VariantController;
+use App\Http\Controllers\Admin\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,12 +51,13 @@ route::group([
         'prefix' => 'categories',
         'as' => 'categories.',
     ], function () {
-        Route::get('/', [ProductController::class, 'listCategory'])->name('listCategory');
-        Route::get('/add-category', [ProductController::class, 'addCategory'])->name('addCategory');
-        Route::post('/add-category', [ProductController::class, 'addPostCategory'])->name('addPostCategory');
-        Route::delete('/delete/{id}', [ProductController::class, 'deleteCategory'])->name('deleteCategory');
-        Route::get('/update/{id}', [ProductController::class, 'updateCategory'])->name('updateCategory');
-        Route::patch('/update/{id}', [ProductController::class, 'updatePatchCategory'])->name('updatePatchCategory');
+        Route::get('/', [CategoryController::class, 'listCategory'])->name('listCategory');
+        Route::get('/add-category', [CategoryController::class, 'addCategory'])->name('addCategory');
+        Route::post('/add-category', [CategoryController::class, 'addPostCategory'])->name('addPostCategory');
+        Route::delete('/delete/{id}', [CategoryController::class, 'deleteCategory'])->name('deleteCategory');
+        Route::get('/update/{id}', [CategoryController::class, 'updateCategory'])->name('updateCategory');
+        Route::patch('/update/{id}', [CategoryController::class, 'updatePatchCategory'])->name('updatePatchCategory');
+        Route::get('/detail/{id}', [CategoryController::class, 'detailCategory'])->name('detailCategory');
     });
     
 }); 
