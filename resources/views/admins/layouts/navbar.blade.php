@@ -40,13 +40,13 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-dark" href="#">
+          <a class="nav-link {{ request()->routeIs('admin.colors.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('admin.colors.listColor') }}">
             <i class="material-symbols-rounded opacity-5">format_color_fill</i>
             <span class="nav-link-text ms-1">Màu sắc</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-dark" href="#">
+          <a class="nav-link {{ request()->routeIs('admin.sizes.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('admin.sizes.listSize') }}">
             <i class="material-symbols-rounded opacity-5">square_foot</i>
             <span class="nav-link-text ms-1">Kích thước</span>
           </a>

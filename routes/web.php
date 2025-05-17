@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\VariantController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ColorController;
+use App\Http\Controllers\Admin\SizeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,7 +61,31 @@ route::group([
         Route::patch('/update/{id}', [CategoryController::class, 'updatePatchCategory'])->name('updatePatchCategory');
         Route::get('/detail/{id}', [CategoryController::class, 'detailCategory'])->name('detailCategory');
     });
-    
+    Route::group([
+        'prefix' => 'colors',
+        'as' => 'colors.',
+    ], function () {
+        Route::get('/', [ColorController::class, 'listColor'])->name('listColor');
+        Route::get('/add-color', [ColorController::class, 'addColor'])->name('addColor');
+        Route::post('/add-color', [ColorController::class, 'addPostColor'])->name('addPostColor');
+        Route::delete('/delete/{id}', [ColorController::class, 'deleteColor'])->name('deleteColor');
+        Route::get('/detail/{id}', [ColorController::class, 'detailColor'])->name('detailColor');
+        Route::get('/update/{id}', [ColorController::class, 'updateColor'])->name('updateColor');
+        Route::patch('/update/{id}', [ColorController::class, 'updatePatchColor'])->name('updatePatchColor');
+    });
+    Route::group([
+        'prefix' => 'sizes',
+        'as' => 'sizes.',
+    ], function () {
+        Route::get('/', [SizeController::class, 'listSize'])->name('listSize');
+        Route::get('/add-size', [SizeController::class, 'addSize'])->name('addSize');
+        Route::post('/add-size', [SizeController::class, 'addPostSize'])->name('addPostSize');
+        Route::delete('/delete/{id}', [SizeController::class, 'deleteSize'])->name('deleteSize');
+        Route::get('/detail/{id}', [SizeController::class, 'detailSize'])->name('detailSize');
+        Route::get('/update/{id}', [SizeController::class, 'updateSize'])->name('updateSize');
+        Route::patch('/update/{id}', [SizeController::class, 'updatePatchSize'])->name('updatePatchSize');
+    });
+
 }); 
 
 
