@@ -102,10 +102,18 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item d-flex align-items-center">
-            <a href="sign-in.html" class="nav-link text-body font-weight-bold px-0">
+          <li class="nav-item dropdown d-flex align-items-center">
+            <div class="nav-link text-body font-weight-bold px-0 " id="accountDropdown" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="material-symbols-rounded">account_circle</i>
-            </a>
+            </div>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
+                <li><a class="dropdown-item" href="#">Thông tin tài khoản</a></li>
+                <li><a class="dropdown-item" href="#">Đổi mật khẩu</a></li>
+                <li><a class="dropdown-item" href="{{ route('logout') }}">Đăng xuất</a></li>
+            </ul>
+            <form id="logout-form" action="#" method="POST" style="display: none;">
+                @csrf
+            </form>
           </li>
         </ul>
       </div>

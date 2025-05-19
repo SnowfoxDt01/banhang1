@@ -15,25 +15,6 @@
         Shop Của Cáo | 
       @show
   </title>
-  <!-- Extra details for Live View on GitHub Pages -->
-  <!--  Social tags      -->
-  <meta name="keywords" content="creative tim, html dashboard, html css dashboard, web dashboard, bootstrap 5 dashboard, bootstrap 5, css3 dashboard, bootstrap 5 admin, Material Dashboard bootstrap 5 dashboard, frontend, responsive bootstrap 5 dashboard, free dashboard, free admin dashboard, free bootstrap 5 admin dashboard">
-  <meta name="description" content="Material Dashboard 3 is a beautiful Bootstrap 5 admin dashboard with a large number of components, designed to look beautiful and organized. If you are looking for a tool to manage and visualize data about your business, this dashboard is the thing for you.">
-  <!-- Twitter Card data -->
-  <meta name="twitter:card" content="product">
-  <meta name="twitter:site" content="@creativetim">
-  <meta name="twitter:title" content="Material Dashboard 3 by Creative Tim">
-  <meta name="twitter:description" content="Material Dashboard 3 is a beautiful Bootstrap 5 admin dashboard with a large number of components, designed to look beautiful and organized. If you are looking for a tool to manage and visualize data about your business, this dashboard is the thing for you.">
-  <meta name="twitter:creator" content="@creativetim">
-  <meta name="twitter:image" content="../../../s3.amazonaws.com/creativetim_bucket/products/450/original/material-dashboard.jpg">
-  <!-- Open Graph data -->
-  <meta property="fb:app_id" content="655968634437471">
-  <meta property="og:title" content="Material Dashboard 3 by Creative Tim" />
-  <meta property="og:type" content="article" />
-  <meta property="og:url" content="dashboard.html" />
-  <meta property="og:image" content="../../../s3.amazonaws.com/creativetim_bucket/products/450/original/material-dashboard.jpg" />
-  <meta property="og:description" content="Material Dashboard 3 is a beautiful Bootstrap 5 admin dashboard with a large number of components, designed to look beautiful and organized. If you are looking for a tool to manage and visualize data about your business, this dashboard is the thing for you." />
-  <meta property="og:site_name" content="Creative Tim" />
   <!--     Fonts and icons     -->
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
   <!-- Nucleo Icons -->

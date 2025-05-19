@@ -6,6 +6,8 @@ use App\Http\Controllers\Admin\VariantController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ColorController;
 use App\Http\Controllers\Admin\SizeController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\AuthenticationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,12 +23,29 @@ use App\Http\Controllers\Admin\SizeController;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/login', [AuthenticationController::class, 'login'])->name('login');
+Route::post('/login', [AuthenticationController::class, 'postLogin'])->name('postLogin');
+Route::get('/logout', [AuthenticationController::class, 'logout'])->name('logout');
+route::get('/register', [AuthenticationController::class, 'register'])->name('register');
+route::post('/post-register', [AuthenticationController::class, 'postRegister'])->name('postRegister');
+
+
 
 route::group([
     'prefix' => 'admin',
     'as' => 'admin.',
-
+    'middleware' => 'checkAdmin'
 ], function () {
+    route::group([
+        'prefix' => 'users',
+        'as' => 'users.',
+    ], function () {
+        Route::get('/', [UserController::class, 'listUser'])->name('listUser');
+        Route::delete('/delete/{id}', [UserController::class, 'deleteUser'])->name('deleteUser');
+        Route::get('/detail/{id}', [UserController::class, 'detailUser'])->name('detailUser');
+        Route::get('/update/{id}', [UserController::class, 'updateUser'])->name('updateUser');
+        Route::patch('/update/{id}', [UserController::class, 'updatePatchUser'])->name('updatePatchUser');
+    });
     route::group([
         'prefix' => 'products',
         'as' => 'products.',
@@ -91,5 +110,5 @@ route::group([
 
  
 Route::get('/test', function () {
-    return view('admins.products.listProduct');
+    return view('login');
 });
