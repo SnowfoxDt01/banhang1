@@ -12,7 +12,7 @@
         </div>
         <ul class="navbar-nav d-flex align-items-center  justify-content-end">
           <li class="nav-item d-flex align-items-center">
-            <a class="btn btn-outline-primary btn-sm mb-0 me-3" target="_blank" href="#">Trang người dùng</a>
+            <a class="btn btn-outline-primary btn-sm mb-0 me-3" target="_blank" href="{{ route('index') }}">Trang người dùng</a>
           </li>
           
           <li class="nav-item d-xl-none ps-3 d-flex align-items-center">

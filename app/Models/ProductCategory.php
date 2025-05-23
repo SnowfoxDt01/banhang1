@@ -17,4 +17,10 @@ class ProductCategory extends Model
         'created_at',
         'updated_at',
     ];
+    // App\Models\Category
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
 }

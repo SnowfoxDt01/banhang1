@@ -25,7 +25,7 @@ class AuthenticationController extends Controller
         $remember = $request->has('remember');
         if (Auth::attempt($dataUserLogin, $remember)) {
             if (Auth::user()->role == 1) {
-                echo 'Chào mừng bạn đến với trang người dùng!';
+                return redirect()->route('index')->with('message', 'Đăng nhập thành công!');
             }
             if (Auth::user()->role == 0) {
                 return redirect()->route('admin.products.listProduct')->with('message', 'Chào mừng đến trang quản trị!');

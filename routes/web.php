@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\ColorController;
 use App\Http\Controllers\Admin\SizeController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthenticationController;
+use App\Http\Controllers\Client\ClientController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,15 +21,27 @@ use App\Http\Controllers\AuthenticationController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+Route::get('/', [ClientController::class, 'index'])->name('index');
 Route::get('/login', [AuthenticationController::class, 'login'])->name('login');
 Route::post('/login', [AuthenticationController::class, 'postLogin'])->name('postLogin');
 Route::get('/logout', [AuthenticationController::class, 'logout'])->name('logout');
 route::get('/register', [AuthenticationController::class, 'register'])->name('register');
 route::post('/post-register', [AuthenticationController::class, 'postRegister'])->name('postRegister');
 
+route::group([
+    'prefix' => 'client',
+    'as' => 'client.',
+    'middleware' => 'checkAdmin'
+], function(){
+    Route::get('/all-products', [ClientController::class, 'allProducts'])->name('allproducts');
+
+    Route::get('/product-detail/{id}', [ClientController::class, 'detail'])->name('detail');
+
+});
 
 
 route::group([
@@ -110,5 +123,5 @@ route::group([
 
  
 Route::get('/test', function () {
-    return view('login');
+    return view('client.layout.default');
 });
