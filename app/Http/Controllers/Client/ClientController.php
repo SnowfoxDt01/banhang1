@@ -22,12 +22,13 @@ class ClientController extends Controller
         return view('client.index', [
             'listProductClient' => $listProductClient,
             'topViewedProducts' => $topViewedProducts,
+            
         ]);
     }  
     
     public function allProducts(Request $request)
     {
-        $categories = ProductCategory::all(); // Lấy danh sách category
+       
 
         $query = Product::with('images');
 
@@ -39,14 +40,26 @@ class ClientController extends Controller
 
         return view('client.allproducts', [
             'products' => $products,
-            'categories' => $categories,
+            
         ]);
     }
 
     public function detail($id)
     {
+        
         $product = Product::with(['images', 'productCategory', 'variantProducts'])->findOrFail($id);
-        return view('client.detailproduct', compact('product'));
+        return view('client.detailproduct', [
+            'product' => $product,
+            
+        ]);
     }
-
+    public function contact()
+    {   
+        return view('client.contact');
+    }
+    public function cart()
+    {
+        
+        return view('client.cart');
+    }
 }

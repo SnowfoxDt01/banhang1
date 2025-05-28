@@ -38,8 +38,9 @@ route::group([
     'middleware' => 'checkAdmin'
 ], function(){
     Route::get('/all-products', [ClientController::class, 'allProducts'])->name('allproducts');
-
+    Route::get('/contact', [ClientController::class, 'contact'])->name('contact');
     Route::get('/product-detail/{id}', [ClientController::class, 'detail'])->name('detail');
+    Route::get('/cart', [ClientController::class, 'cart'])->name('cart');
 
 });
 

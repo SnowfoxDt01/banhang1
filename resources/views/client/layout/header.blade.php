@@ -17,8 +17,13 @@
                                             <li><a href="{{ route('index') }}">Trang chủ</a></li>
                                             <li><a href="{{ route('client.allproducts') }}">Danh mục</a>
                                                 <ul class="submenu">
-                                                    <li><a href="#">Danh mục 1</a></li>
-                                                    <li><a href="#">Danh mục 2</a></li>
+                                                    @foreach($categories as $category)
+                                                        <li>
+                                                            <a href="{{ route('client.allproducts', ['category' => $category->id]) }}">
+                                                                {{ $category->name }}
+                                                            </a>
+                                                        </li>
+                                                    @endforeach
                                                 </ul>
                                             </li>
                                             <li class="hot"><a href="#">Sản phẩm nổi bật</a>
@@ -32,12 +37,12 @@
                                                 <ul class="submenu">
                                                     <li><a href="#">Giới thiệu</a></li>
                                                     <li><a href="#">Hướng dẫn</a></li>
-                                                    <li><a href="#">Liên hệ</a></li>
+                                                    <li><a href="{{ route('client.contact') }}">Liên hệ</a></li>
                                                     <li><a href="#">Chăm sóc khách hàng</a></li>
                                                     <li><a href="#">Hoàn tiền sản phẩm</a></li>
                                                 </ul>
                                             </li>
-                                            <li><a href="#">Liên hệ</a></li>
+                                            <li><a href="{{ route('client.contact') }}">Liên hệ</a></li>
                                         </ul>
                                     </nav>
                                 </div>
@@ -59,7 +64,7 @@
                                     </li>
                                     <li>
                                         <div class="shopping-card">
-                                            <a href="cart.html"><i class="fas fa-shopping-cart"></i></a>
+                                            <a href="{{ route('client.cart') }}"><i class="fas fa-shopping-cart"></i></a>
                                         </div>
                                     </li>
                                    <li class="d-none d-lg-block">
