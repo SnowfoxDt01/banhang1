@@ -74,7 +74,13 @@
 <script>
     function changeMainImage(thumbnail) {
         const mainImage = document.getElementById('mainImage');
-        mainImage.src = thumbnail.src;
+        if (mainImage) {
+            mainImage.src = thumbnail.src;
+            mainImage.alt = thumbnail.alt;
+            console.log('Main image changed:', thumbnail.src);
+        } else {
+            console.log('Main image element not found!');
+        }
     }
 </script>
 @endpush

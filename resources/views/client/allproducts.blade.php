@@ -105,10 +105,11 @@
                                 <div class="col-xl-4 col-lg-4 col-md-6">
                                     <div class="single-product mb-60">
                                         <div class="product-img">
-                                            <img class="img-client"
-                                                src="{{ optional($product->images->first())->image ? asset($product->images->first()->image) : asset('client/img/default.png') }}"
-                                                alt="{{ optional($product->images->first())->alt ?? 'No image' }}">
-
+                                            <a href="{{ route('client.detail', $product->id) }}">
+                                                <img class="img-client"
+                                                    src="{{ optional($product->images->first())->image ? asset($product->images->first()->image) : asset('client/img/default.png') }}"
+                                                    alt="{{ optional($product->images->first())->alt ?? 'No image' }}">
+                                            </a>
                                             <div class="new-product">
                                                 <span>New</span>
                                             </div>
@@ -121,7 +122,7 @@
                                                 <i class="far fa-star low-star"></i>
                                                 <i class="far fa-star low-star"></i>
                                             </div>
-                                            <h4><a href="#">{{ $product->name }}</a></h4>
+                                            <h4><a href="{{ route('client.detail', $product->id) }}">{{ $product->name }}</a></h4>
                                             <div class="price">
                                                 <ul>
                                                     <li>{{ number_format($product->sale_price, 0, ',', '.') }}₫</li>
