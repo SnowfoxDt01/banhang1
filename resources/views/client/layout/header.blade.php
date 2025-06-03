@@ -78,6 +78,9 @@
                                                     <li><a class="dropdown-item" href="#">Đơn hàng</a></li>
                                                     <li><hr class="dropdown-divider"></li>
                                                     <li><a class="dropdown-item" href="{{ route('logout') }}">Đăng xuất</a></li>
+                                                    @if(Auth::check() && Auth::user()->role == 0)
+                                                        <li><a class="dropdown-item" href="{{ route('admin.products.listProduct') }}">Trang Admin</a></li>
+                                                    @endif
                                                 </ul>
                                                 
                                             </div>

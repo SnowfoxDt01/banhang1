@@ -42,6 +42,8 @@ route::group([
     Route::get('/product-detail/{id}', [ClientController::class, 'detail'])->name('detail');
     Route::get('/cart', [ClientController::class, 'cart'])->name('cart');
 
+    // Thêm route cho thêm vào giỏ hàng (dùng POST)
+    Route::post('/cart/add', [ClientController::class, 'addToCart'])->name('cart.add');
 });
 
 
