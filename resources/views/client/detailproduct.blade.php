@@ -120,10 +120,10 @@
                     <hr>
                     
                     <div style="display: flex; align-items: center; gap: 10px;">
-                        <button type="button" class="btn border quantity-btn" onclick="changeQuantity(-1)">-</button>
+                        <button type="button" class="btn border quantity-btn" id="btnMinus">-</button>
                         <input type="number" name="quantity" id="quantityInput" value="1" min="1" max="10"
-                         style="width: 60px; text-align: center; border: 1px solid #ccc; border-radius: 4px; padding: 4px 8px;">
-                        <button type="button" class="btn border quantity-btn" onclick="changeQuantity(1)">+</button>
+                            style="width: 60px; text-align: center; border: 1px solid #ccc; border-radius: 4px; padding: 4px 8px;">
+                        <button type="button" class="btn border quantity-btn" id="btnPlus">+</button>
                         <button type="submit" class="btn btn-danger btn-lg">Thêm vào giỏ hàng</button>
                     </div>
                 </form>
@@ -197,18 +197,21 @@
                 el.style.color = '#ee4d2d';
             });
         });
-    });
 
-    function changeQuantity(delta) {
-        var input = document.getElementById('quantityInput');
-        var min = parseInt(input.min) || 1;
-        var max = parseInt(input.max) || 10;
-        var val = parseInt(input.value) || 1;
-        val += delta;
-        if(val < min) val = min;
-        if(val > max) val = max;
-        input.value = val;
-    }
+        const input = document.getElementById('quantityInput');
+        const btnMinus = document.getElementById('btnMinus');
+        const btnPlus = document.getElementById('btnPlus');
+        btnMinus.addEventListener('click', function() {
+            let min = parseInt(input.min) || 1;
+            let val = parseInt(input.value) || 1;
+            if(val > min) input.value = val - 1;
+        });
+        btnPlus.addEventListener('click', function() {
+            let max = parseInt(input.max) || 10;
+            let val = parseInt(input.value) || 1;
+            if(val < max) input.value = val + 1;
+        });
+    });
 
     // Cập nhật variant_id khi chọn màu hoặc size
     const variantMap = @json($product->variantProducts->mapWithKeys(function($v) {

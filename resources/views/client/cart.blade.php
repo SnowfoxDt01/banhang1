@@ -29,154 +29,79 @@
     </div>
   </div>
   <!-- slider Area End-->
-
+      @if(session('success'))
+          <div class="alert alert-success" style="font-size:16px; margin-bottom:18px;">{{ session('success') }}</div>
+      @endif
   <!--================Cart Area =================-->
   <section class="cart_area section_padding">
+   
     <div class="container">
       <div class="cart_inner">
         <div class="table-responsive">
           <table class="table">
             <thead>
               <tr>
-                <th scope="col">Product</th>
-                <th scope="col">Price</th>
-                <th scope="col">Quantity</th>
-                <th scope="col">Total</th>
+                <th scope="col">Ảnh sản phẩm</th>
+                <th scope="col">Giá</th>
+                <th scope="col">Số lượng</th>
+                <th scope="col">Tổng giá</th>
               </tr>
             </thead>
             <tbody>
+              @php
+                  $cart = Auth::check() ? (\App\Models\ShoppingCart::where('user_id', Auth::id())->with('items.variantProduct.product.images')->first()) : null;
+                  $cartItems = $cart ? $cart->items : collect();
+                  $total = 0;
+              @endphp
+              @foreach($cartItems as $item)
+                  @php
+                      $product = $item->variantProduct->product;
+                      $variant = $item->variantProduct;
+                      $image = $variant->images->image ?? ($product->images->first()->image ?? 'client/img/default.png');
+                      $lineTotal = ($product->sale_price > 0 ? $product->sale_price : $product->base_price) * $item->quantity;
+                      $total += $lineTotal;
+                  @endphp
+                  <tr data-item-id="{{ $item->id }}">
+                      <td>
+                          <div class="media">
+                              <div class="d-flex">
+                                  <img src="{{ asset($image) }}" alt="" style="width: 70px; height: 70px; object-fit: cover; border-radius: 6px; border: 1px solid #eee;" />
+                              </div>
+                              <div class="media-body">
+                                  <p>{{ $product->name }}<br><small>Màu: {{ $variant->color->name ?? '' }}, Size: {{ $variant->size->name ?? '' }}</small></p>
+                              </div>
+                          </div>
+                      </td>
+                      <td>
+                          <h5 class="unit-price">{{ number_format($product->sale_price > 0 ? $product->sale_price : $product->base_price, 0, ',', '.') }}₫</h5>
+                      </td>
+                      <td>
+                          <div class="cart-quantity">
+                              <input type='button' value='-' class='qtyminus minus' id='qtyminus_{{ $item->id }}'>
+                              <input type='text' name='quantity_{{ $item->id }}' value='{{ $item->quantity }}' class='qty' id='qty_{{ $item->id }}' min='1' max='{{ $variant->quantity }}'>
+                              <input type='button' value='+' class='qtyplus plus' id='qtyplus_{{ $item->id }}'>
+                          </div>
+                      </td>
+                      <td>
+                          <h5 class="line-total">{{ number_format($lineTotal, 0, ',', '.') }}₫</h5>
+                      </td>
+                  </tr>
+              @endforeach
               <tr>
-                <td>
-                  <div class="media">
-                    <div class="d-flex">
-                      <img src="{{ asset('client/img/arrivel/arrivel_1.png') }}" alt="" />
-                    </div>
-                    <div class="media-body">
-                      <p>Minimalistic shop for multipurpose use</p>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <h5>$360.00</h5>
-                </td>
-                <td>
-                  <div class="product_count">
-                    <!-- <input type="text" value="1" min="0" max="10" title="Quantity:"
-                      class="input-text qty input-number" />
-                    <button
-                      class="increase input-number-increment items-count" type="button">
-                      <i class="ti-angle-up"></i>
-                    </button>
-                    <button
-                      class="reduced input-number-decrement items-count" type="button">
-                      <i class="ti-angle-down"></i>
-                    </button> -->
-                    <span class="input-number-decrement"> <i class="ti-minus"></i></span>
-                    <input class="input-number" type="text" value="1" min="0" max="10">
-                    <span class="input-number-increment"> <i class="ti-plus"></i></span>
-                  </div>
-                </td>
-                <td>
-                  <h5>$720.00</h5>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="media">
-                    <div class="d-flex">
-                      <img src="{{ asset('client/img/arrivel/arrivel_2.png') }}" alt="" />
-                    </div>
-                    <div class="media-body">
-                      <p>Minimalistic shop for multipurpose use</p>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <h5>$360.00</h5>
-                </td>
-                <td>
-                  <div class="product_count">
-                      <span class="input-number-decrement"> <i class="ti-minus"></i></span>
-                      <input class="input-number" type="text" value="1" min="0" max="10">
-                      <span class="input-number-increment"> <i class="ti-plus"></i></span>
-                  </div>
-                </td>
-                <td>
-                  <h5>$720.00</h5>
-                </td>
-              </tr>
-              <tr class="bottom_button">
-                <td>
-                  <a class="btn_1" href="#">Update Cart</a>
-                </td>
-                <td></td>
-                <td></td>
-                <td>
-                  <div class="cupon_text float-right">
-                    <a class="btn_1" href="#">Close Coupon</a>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td></td>
-                <td></td>
-                <td>
-                  <h5>Subtotal</h5>
-                </td>
-                <td>
-                  <h5>$2160.00</h5>
-                </td>
-              </tr>
-              <tr class="shipping_area">
-                <td></td>
-                <td></td>
-                <td>
-                  <h5>Shipping</h5>
-                </td>
-                <td>
-                  <div class="shipping_box">
-                    <ul class="list">
-                      <li>
-                        Flat Rate: $5.00
-                        <input type="radio" aria-label="Radio button for following text input">
-                      </li>
-                      <li>
-                        Free Shipping
-                        <input type="radio" aria-label="Radio button for following text input">
-                      </li>
-                      <li>
-                        Flat Rate: $10.00
-                        <input type="radio" aria-label="Radio button for following text input">
-                      </li>
-                      <li class="active">
-                        Local Delivery: $2.00
-                        <input type="radio" aria-label="Radio button for following text input">
-                      </li>
-                    </ul>
-                    <h6>
-                      Calculate Shipping
-                      <i class="fa fa-caret-down" aria-hidden="true"></i>
-                    </h6>
-                    <select class="shipping_select">
-                      <option value="1">Bangladesh</option>
-                      <option value="2">India</option>
-                      <option value="4">Pakistan</option>
-                    </select>
-                    <select class="shipping_select section_bg">
-                      <option value="1">Select a State</option>
-                      <option value="2">Select a State</option>
-                      <option value="4">Select a State</option>
-                    </select>
-                    <input class="post_code" type="text" placeholder="Postcode/Zipcode" />
-                    <a class="btn_1" href="#">Update Details</a>
-                  </div>
-                </td>
+                  <td></td>
+                  <td></td>
+                  <td>
+                      <h5>Tổng tiền thanh toán</h5>
+                  </td>
+                  <td>
+                      <h5 id="cart-total">{{ number_format($total, 0, ',', '.') }}₫</h5>
+                  </td>
               </tr>
             </tbody>
           </table>
           <div class="checkout_btn_inner float-right">
-            <a class="btn_1" href="#">Continue Shopping</a>
-            <a class="btn_1 checkout_btn_1" href="#">Proceed to checkout</a>
+            <a class="btn_1" href="{{ route('index') }}">Tiếp tục mua sắm</a>
+            <a class="btn_1 checkout_btn_1" href="{{ route('client.checkout') }}">Thanh toán</a>
           </div>
         </div>
       </div>
@@ -187,4 +112,53 @@
 @endsection
 
 @push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function formatCurrency(num) {
+        return num.toLocaleString('vi-VN') + '₫';
+    }
+    @foreach($cartItems as $item)
+        let maxQty{{ $item->id }} = {{ $variant->quantity }};
+        let qtyInput{{ $item->id }} = document.getElementById('qty_{{ $item->id }}');
+        let minusBtn{{ $item->id }} = document.getElementById('qtyminus_{{ $item->id }}');
+        let plusBtn{{ $item->id }} = document.getElementById('qtyplus_{{ $item->id }}');
+        let tr{{ $item->id }} = qtyInput{{ $item->id }}.closest('tr');
+        let unitPrice{{ $item->id }} = parseInt(tr{{ $item->id }}.querySelector('.unit-price').textContent.replace(/\D/g, ''));
+        let lineTotalEl{{ $item->id }} = tr{{ $item->id }}.querySelector('.line-total');
+
+        function updateLineTotal{{ $item->id }}() {
+            let qty = parseInt(qtyInput{{ $item->id }}.value) || 1;
+            if(qty < 1) qty = 1;
+            if(qty > maxQty{{ $item->id }}) qty = maxQty{{ $item->id }};
+            qtyInput{{ $item->id }}.value = qty;
+            let lineTotal = unitPrice{{ $item->id }} * qty;
+            lineTotalEl{{ $item->id }}.textContent = formatCurrency(lineTotal);
+            updateCartTotal();
+        }
+
+        minusBtn{{ $item->id }}.addEventListener('click', function() {
+            let qty = parseInt(qtyInput{{ $item->id }}.value) || 1;
+            if(qty > 1) {
+                qtyInput{{ $item->id }}.value = qty - 1;
+                updateLineTotal{{ $item->id }}();
+            }
+        });
+        plusBtn{{ $item->id }}.addEventListener('click', function() {
+            let qty = parseInt(qtyInput{{ $item->id }}.value) || 1;
+            if(qty < maxQty{{ $item->id }}) {
+                qtyInput{{ $item->id }}.value = qty + 1;
+                updateLineTotal{{ $item->id }}();
+            }
+        });
+        qtyInput{{ $item->id }}.addEventListener('change', updateLineTotal{{ $item->id }});
+    @endforeach
+    function updateCartTotal() {
+        let total = 0;
+        document.querySelectorAll('.line-total').forEach(function(el) {
+            total += parseInt(el.textContent.replace(/\D/g, ''));
+        });
+        document.getElementById('cart-total').textContent = formatCurrency(total);
+    }
+});
+</script>
 @endpush

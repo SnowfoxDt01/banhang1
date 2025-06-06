@@ -41,9 +41,8 @@ route::group([
     Route::get('/contact', [ClientController::class, 'contact'])->name('contact');
     Route::get('/product-detail/{id}', [ClientController::class, 'detail'])->name('detail');
     Route::get('/cart', [ClientController::class, 'cart'])->name('cart');
-
-    // Thêm route cho thêm vào giỏ hàng (dùng POST)
     Route::post('/cart/add', [ClientController::class, 'addToCart'])->name('cart.add');
+    Route::get('/checkout', [ClientController::class, 'checkout'])->name('checkout');
 });
 
 
@@ -126,5 +125,5 @@ route::group([
 
  
 Route::get('/test', function () {
-    return view('client.layout.default');
+    return view('client.checkout');
 });

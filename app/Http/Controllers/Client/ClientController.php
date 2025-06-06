@@ -103,4 +103,42 @@ class ClientController extends Controller
         }
         return redirect()->route('client.cart')->with('success', 'Đã thêm vào giỏ hàng!');
     }
+    public function checkout()
+    {
+        $userId = Auth::id();
+        if (!$userId) {
+            return redirect()->route('login')->with('error', 'Bạn cần đăng nhập để thanh toán!');
+        }
+
+        $shoppingCart = ShoppingCart::where('user_id', $userId)->with('items.variantProduct.product', 'items.variantProduct.images')->first();
+        if (!$shoppingCart || $shoppingCart->items->isEmpty()) {
+            return redirect()->route('client.cart')->with('error', 'Giỏ hàng của bạn đang trống!');
+        }
+
+        // Prepare display data for cart items
+        $cartDisplayItems = $shoppingCart->items->map(function ($item) {
+            $product = $item->variantProduct->product;
+            $variant = $item->variantProduct;
+            $price = $product->sale_price > 0 ? $product->sale_price : $product->base_price;
+            $lineTotal = $price * $item->quantity;
+            $variantImage = $variant->images->image ?? ($product->images->first()->image ?? 'client/img/default.png');
+            $shortName = mb_strlen($product->name) > 10 ? mb_substr($product->name, 0, 10) . '...' : $product->name;
+
+            return [
+                'image' => $variantImage,
+                'name' => $shortName,
+                'quantity' => $item->quantity,
+                'line_total' => $lineTotal,
+            ];
+        });
+
+        // Tính tổng tiền
+        $cartTotal = $cartDisplayItems->sum('line_total');
+
+        return view('client.checkout', [
+            'shoppingCart' => $shoppingCart,
+            'cartDisplayItems' => $cartDisplayItems,
+            'cartTotal' => $cartTotal,
+        ]);
+    }
 }

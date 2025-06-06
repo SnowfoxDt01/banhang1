@@ -19,4 +19,9 @@ class ShoppingCartItem extends Model
         'created_at',
         'updated_at'
     ];
+    public function variantProduct()
+    {
+        return $this->belongsTo(VariantProduct::class, 'variant_id');
+    }
+
 }
