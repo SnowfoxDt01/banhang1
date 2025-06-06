@@ -43,6 +43,8 @@ route::group([
     Route::get('/cart', [ClientController::class, 'cart'])->name('cart');
     Route::post('/cart/add', [ClientController::class, 'addToCart'])->name('cart.add');
     Route::get('/checkout', [ClientController::class, 'checkout'])->name('checkout');
+    Route::post('/checkout', [ClientController::class, 'processCheckout'])->name('checkout.process');
+    Route::get('/confirmation', [ClientController::class, 'confimation'])->name('confimation');
 });
 
 

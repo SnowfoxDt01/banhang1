@@ -10,6 +10,10 @@ use App\Models\ShoppingCart;
 use App\Models\ShoppingCartItem;
 use App\Models\VariantProduct;
 use Illuminate\Support\Facades\Auth;
+use App\Models\ShopOrder;
+use App\Models\OrderItem;
+use App\Models\Address;
+
 
 class ClientController extends Controller
 {
@@ -139,6 +143,93 @@ class ClientController extends Controller
             'shoppingCart' => $shoppingCart,
             'cartDisplayItems' => $cartDisplayItems,
             'cartTotal' => $cartTotal,
+        ]);
+    }
+    public function processCheckout(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'number' => 'required|string|max:20',
+            'city' => 'required|string|max:100',
+            'add1' => 'required|string|max:255',
+            'zip' => 'nullable|string|max:20',
+            'message' => 'nullable|string',
+        ]);
+
+        $userId = Auth::id();
+
+        // Tạo địa chỉ giao hàng
+        $address = Address::create([
+            'user_id' => $userId,
+            'name' => $request->name,
+            'phone' => $request->number,
+            'city' => $request->city,
+            'address_line1' => $request->add1,
+            'address_line2' => $request->add2,
+            'zip_code' => $request->zip,
+        ]);
+
+        $shoppingCart = ShoppingCart::where('user_id', $userId)->with('items.variantProduct.product')->first();
+
+        if (!$shoppingCart || $shoppingCart->items->isEmpty()) {
+            return redirect()->route('client.cart')->with('error', 'Giỏ hàng rỗng!');
+        }
+
+        // Tính tổng tiền
+        $total = 0;
+        foreach ($shoppingCart->items as $item) {
+            $price = $item->variantProduct->product->sale_price > 0
+                ? $item->variantProduct->product->sale_price
+                : $item->variantProduct->product->base_price;
+            $total += $price * $item->quantity;
+        }
+
+        // Tạo đơn hàng
+        $order = ShopOrder::create([
+            'user_id' => $userId,
+            'total_price' => $total,
+            'address_id' => $address->id,
+            'payment_method' => 'cod', 
+            'payment_status' => 'pending', // bạn có thể có enum trạng thái như pending, shipped, done,...
+        ]);
+
+        // Thêm sản phẩm vào đơn hàng (nếu có bảng trung gian)
+        foreach ($shoppingCart->items as $item) {
+            $order->orderItems()->create([
+                'order_id' => $order->id,
+                'product_id' => $item->variantProduct->product_id,
+                'variant_id' => $item->variant_id,
+                'quantity' => $item->quantity,
+                'order_total_price' => $item->variantProduct->product->sale_price > 0
+                    ? $item->variantProduct->product->sale_price
+                    : $item->variantProduct->product->base_price,
+            ]);
+        }
+
+        // Xóa giỏ hàng
+        $shoppingCart->items()->delete();
+        $shoppingCart->delete();
+
+        return redirect()->route('client.confimation')->with('success', 'Đơn hàng của bạn đã được ghi nhận!');
+    }
+
+    public function confimation()
+    {
+        $order = ShopOrder::where('user_id', Auth::id())
+            ->latest()
+            ->first();
+
+        if (!$order) {
+            return redirect()->route('client.cart')->with('error', 'Không tìm thấy đơn hàng!');
+        }
+
+        $items = OrderItem::where('order_id', $order->id)
+            ->with('variant')
+            ->get();
+
+        return view('client.confirmation', [
+            'order' => $order,
+            'items' => $items,
         ]);
     }
 }
