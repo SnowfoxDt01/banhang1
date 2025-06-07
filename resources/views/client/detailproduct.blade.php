@@ -76,7 +76,7 @@
 
                 <!-- Biến thể sản phẩm: Màu sắc và Kích thước -->
  
-                <form action="{{ route('client.cart.add') }}" method="POST" id="addToCartForm" style="margin-top: 16px;">
+                <form action="{{ route('client.cart.add') }}" method="POST" id="addToCartForm" style="margin-top: 16px;" onsubmit="return validateVariantSelection();">
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
                     <input type="hidden" name="variant_id" id="variant_id" value="{{ $product->variantProducts->first()->id ?? '' }}">
@@ -179,11 +179,15 @@
                 document.querySelectorAll('.color-option').forEach(function(opt) {
                     opt.style.borderColor = '#e0e0e0';
                     opt.querySelector('.selected-mark').style.display = 'none';
+                    opt.classList.remove('selected-color'); // <-- thêm dòng này
                 });
                 el.style.borderColor = '#ee4d2d';
                 el.querySelector('.selected-mark').style.display = 'block';
+                el.classList.add('selected-color'); // <-- thêm dòng này
+                updateVariantId(); // <-- gọi cập nhật luôn
             });
         });
+
         // Hiệu ứng chọn size
         document.querySelectorAll('.size-option').forEach(function(el) {
             el.addEventListener('click', function() {
@@ -191,10 +195,13 @@
                     opt.style.borderColor = '#ccc';
                     opt.style.background = '#fff';
                     opt.style.color = '#222';
+                    opt.classList.remove('selected-size'); // <-- thêm dòng này
                 });
                 el.style.borderColor = '#ee4d2d';
                 el.style.background = '#fff7f2';
                 el.style.color = '#ee4d2d';
+                el.classList.add('selected-size'); // <-- thêm dòng này
+                updateVariantId(); // <-- gọi cập nhật luôn
             });
         });
 
@@ -219,20 +226,36 @@
     }));
 
     function updateVariantId() {
-        const color = document.querySelector('.color-option[style*="border-color: #ee4d2d"]');
-        const size = document.querySelector('.size-option[style*="border-color: #ee4d2d"]');
+        const color = document.querySelector('.color-option.selected-color');
+        const size = document.querySelector('.size-option.selected-size');
+        const variantIdInput = document.getElementById('variant_id');
+
         if (color && size) {
             const key = color.dataset.colorId + '_' + size.dataset.sizeId;
             if (variantMap[key]) {
-                document.getElementById('variant_id').value = variantMap[key];
+                variantIdInput.value = variantMap[key];
+            } else {
+                variantIdInput.value = '';
             }
+        } else {
+            variantIdInput.value = ''; // reset nếu chưa chọn đầy đủ
         }
     }
+
     document.querySelectorAll('.color-option').forEach(el => {
         el.addEventListener('click', updateVariantId);
     });
     document.querySelectorAll('.size-option').forEach(el => {
         el.addEventListener('click', updateVariantId);
     });
+    function validateVariantSelection() {
+        const variantId = document.getElementById('variant_id').value;
+        if (!variantId) {
+            alert('Vui lòng chọn màu sắc và kích thước trước khi thêm vào giỏ hàng!');
+            return false;
+        }
+        return true;
+    }
+
 </script>
 @endpush

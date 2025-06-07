@@ -54,7 +54,16 @@ class ClientController extends Controller
 
     public function detail($id)
     {
-        
+        // Kiểm tra session để tránh tăng view khi reload
+        $viewedProducts = session()->get('viewed_products', []);
+        if (!in_array($id, $viewedProducts)) {
+            // Tăng view
+            Product::where('id', $id)->increment('view');
+            // Lưu lại vào session
+            $viewedProducts[] = $id;
+            session(['viewed_products' => $viewedProducts]);
+        }
+
         $product = Product::with(['images', 'productCategory', 'variantProducts'])->findOrFail($id);
         return view('client.detailproduct', [
             'product' => $product,
@@ -66,8 +75,7 @@ class ClientController extends Controller
         return view('client.contact');
     }
     public function cart()
-    {
-        
+    { 
         return view('client.cart');
     }
     public function addToCart(Request $request)
