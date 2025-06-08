@@ -34,12 +34,6 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-dark" href="#">
-            <i class="material-symbols-rounded opacity-5">receipt_long</i>
-            <span class="nav-link-text ms-1">Hóa đơn</span>
-          </a>
-        </li>
-        <li class="nav-item">
           <a class="nav-link {{ request()->routeIs('admin.colors.*') ? 'active bg-gradient-dark text-white' : 'text-dark' }}" href="{{ route('admin.colors.listColor') }}">
             <i class="material-symbols-rounded opacity-5">format_color_fill</i>
             <span class="nav-link-text ms-1">Màu sắc</span>
@@ -51,6 +45,19 @@
             <span class="nav-link-text ms-1">Kích thước</span>
           </a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="{{ route('admin.orders.index') }}">
+            <i class="material-symbols-rounded opacity-5">request_quote</i>
+            <span class="nav-link-text ms-1">Đơn hàng</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="{{ route('admin.bills.index') }}">
+            <i class="material-symbols-rounded opacity-5">receipt_long</i>
+            <span class="nav-link-text ms-1">Hóa đơn</span>
+          </a>
+        </li>
+
       </ul>
     </div>
   </aside>

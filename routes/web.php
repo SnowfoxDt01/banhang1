@@ -9,6 +9,8 @@ use App\Http\Controllers\Admin\SizeController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\Client\ClientController;
+use App\Http\Controllers\Admin\BillController;
+use App\Http\Controllers\Admin\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,6 +55,22 @@ route::group([
     'as' => 'admin.',
     'middleware' => 'checkAdmin'
 ], function () {
+    route::group([
+        'prefix' => 'orders',
+        'as' => 'orders.',
+    ], function () {
+        Route::get('/', [OrderController::class, 'index'])->name('index');
+        // Route::get('/detail/{id}', [\App\Http\Controllers\Admin\BillController::class, 'detail'])->name('detail');
+        // Route::delete('/delete/{id}', [\App\Http\Controllers\Admin\BillController::class, 'delete'])->name('delete');
+    });
+    route::group([
+        'prefix' => 'bills',
+        'as' => 'bills.',
+    ], function () {
+        Route::get('/', [BillController::class, 'index'])->name('index');
+        // Route::get('/detail/{id}', [\App\Http\Controllers\Admin\BillController::class, 'detail'])->name('detail');
+        // Route::delete('/delete/{id}', [\App\Http\Controllers\Admin\BillController::class, 'delete'])->name('delete');
+    });
     route::group([
         'prefix' => 'users',
         'as' => 'users.',
