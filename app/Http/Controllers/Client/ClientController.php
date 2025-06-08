@@ -212,6 +212,10 @@ class ClientController extends Controller
                     ? $item->variantProduct->product->sale_price
                     : $item->variantProduct->product->base_price,
             ]);
+            // Trừ tồn kho của biến thể sản phẩm
+            $variant = $item->variantProduct;
+            $variant->quantity = max(0, $variant->quantity - $item->quantity);
+            $variant->save();
         }
 
         // Xóa giỏ hàng
