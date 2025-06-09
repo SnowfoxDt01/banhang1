@@ -60,16 +60,16 @@ route::group([
         'as' => 'orders.',
     ], function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
-        // Route::get('/detail/{id}', [\App\Http\Controllers\Admin\BillController::class, 'detail'])->name('detail');
-        // Route::delete('/delete/{id}', [\App\Http\Controllers\Admin\BillController::class, 'delete'])->name('delete');
+        Route::get('/{id}', [OrderController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [OrderController::class, 'edit'])->name('edit');
+        Route::patch('/{id}', [OrderController::class, 'update'])->name('update');
     });
     route::group([
         'prefix' => 'bills',
         'as' => 'bills.',
     ], function () {
         Route::get('/', [BillController::class, 'index'])->name('index');
-        // Route::get('/detail/{id}', [\App\Http\Controllers\Admin\BillController::class, 'detail'])->name('detail');
-        // Route::delete('/delete/{id}', [\App\Http\Controllers\Admin\BillController::class, 'delete'])->name('delete');
+        Route::get('/{id}', [BillController::class, 'show'])->name('show');
     });
     route::group([
         'prefix' => 'users',
