@@ -37,7 +37,7 @@
         <div class="row">
             <div class="col-lg-12">
             <div class="confirmation_tittle">
-                <span>Thank you. Your order has been received.</span>
+                <span>Cảm ơn bạn đã mua hàng. Đơn hàng của bạn sẽ được giao sớm nhất có thể.</span>
                 @if (session('success'))
                     <div class="alert alert-success">
                         {{ session('success') }}

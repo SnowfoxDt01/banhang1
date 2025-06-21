@@ -47,6 +47,8 @@ route::group([
     Route::get('/checkout', [ClientController::class, 'checkout'])->name('checkout');
     Route::post('/checkout', [ClientController::class, 'processCheckout'])->name('checkout.process');
     Route::get('/confirmation', [ClientController::class, 'confimation'])->name('confimation');
+    Route::get('/order-history', [ClientController::class, 'orderHistory'])->name('orderHistory');
+    Route::get('/order-detail/{id}', [ClientController::class, 'orderDetail'])->name('orderDetail');
 });
 
 

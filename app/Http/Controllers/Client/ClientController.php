@@ -244,4 +244,30 @@ class ClientController extends Controller
             'items' => $items,
         ]);
     }
+    public function orderHistory()
+    {
+        $userId = Auth::id();
+        if (!$userId) {
+            return redirect()->route('login')->with('error', 'Bạn cần đăng nhập để xem lịch sử mua hàng!');
+        }
+        $orders = ShopOrder::with(['address'])
+            ->where('user_id', $userId)
+            ->orderByDesc('created_at')
+            ->paginate(10);
+        return view('client.listorder', compact('orders'));
+    }
+    
+    public function orderDetail($id)
+    {
+        $userId = Auth::id();
+        $order = ShopOrder::with('address')->where('id', $id)->where('user_id', $userId)->first();
+        if (!$order) {
+            return redirect()->route('client.orderHistory')->with('error', 'Không tìm thấy đơn hàng!');
+        }
+        $items = OrderItem::where('order_id', $order->id)->with('variant')->get();
+        return view('client.confirmation', [
+            'order' => $order,
+            'items' => $items,
+        ]);
+    }
 }
